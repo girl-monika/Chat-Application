@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨ Sign Up - Secure Document Sharing</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .animate-pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        .animate-bounce-slow {
+            animation: bounce 2s infinite;
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .animate-slide-up {
+            animation: slideUp 0.6s ease-out;
+        }
+        
+        .animate-scale-in {
+            animation: scaleIn 0.5s ease-out;
+        }
+        
+        .animate-wiggle {
+            animation: wiggle 1s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes scaleIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
+        @keyframes wiggle {
+            0%, 7% { transform: rotateZ(0); }
+            15% { transform: rotateZ(-15deg); }
+            20% { transform: rotateZ(10deg); }
+            25% { transform: rotateZ(-10deg); }
+            30% { transform: rotateZ(6deg); }
+            35% { transform: rotateZ(-4deg); }
+            40%, 100% { transform: rotateZ(0); }
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .input-focus:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .floating-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+        
+        .shape {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        .shape:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .shape:nth-child(2) { top: 20%; right: 10%; animation-delay: 2s; }
+        .shape:nth-child(3) { bottom: 20%; left: 20%; animation-delay: 4s; }
+        .shape:nth-child(4) { bottom: 10%; right: 20%; animation-delay: 6s; }
+        .shape:nth-child(5) { top: 50%; left: 5%; animation-delay: 1s; }
+        .shape:nth-child(6) { top: 60%; right: 5%; animation-delay: 3s; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-green-400 via-blue-500 to-purple-600 min-h-screen flex flex-col relative overflow-hidden">
+    <!-- Floating Background Shapes -->
+    <div class="floating-shapes">
+        <div class="shape text-6xl">✨</div>
+        <div class="shape text-4xl">👤</div>
+        <div class="shape text-5xl">🚀</div>
+        <div class="shape text-3xl">💫</div>
+        <div class="shape text-4xl">🌟</div>
+        <div class="shape text-3xl">🎉</div>
+    </div>
+    
+    <header class="w-full flex justify-between items-center px-6 md:px-10 py-6 glass-effect shadow-lg relative z-10 animate-fade-in">
+        <div class="text-xl md:text-2xl font-bold gradient-text flex items-center gap-2">
+            <span class="text-3xl">💬</span>
+            <span>Secure Document Sharing</span>
+        </div>
+        <div class="space-x-3">
+            <a href="/signup" class="px-4 py-2 rounded-full bg-white text-green-600 font-semibold hover:bg-green-50 transition-all duration-300 btn-hover flex items-center gap-2">
+                <i class="fas fa-user-plus"></i>
+                <span class="hidden sm:inline">Sign Up</span>
+            </a>
+            <a href="/login" class="px-4 py-2 rounded-full bg-white bg-opacity-20 text-white font-semibold hover:bg-opacity-30 transition-all duration-300 btn-hover flex items-center gap-2">
+                <i class="fas fa-sign-in-alt"></i>
+                <span class="hidden sm:inline">Login</span>
+            </a>
+        </div>
+    </header>
+    
+    <main class="flex-1 flex flex-col justify-center items-center px-4 relative z-10">
+        <div class="w-full max-w-md animate-slide-up">
+            <div class="text-center mb-8">
+                <div class="text-6xl mb-4 animate-bounce-slow">✨</div>
+                <h1 class="text-4xl font-bold text-white mb-2">Join Our Community!</h1>
+                <p class="text-white text-opacity-90 text-lg">Create your account and start sharing</p>
+            </div>
+            
+            <form method="POST" class="glass-effect p-8 rounded-3xl shadow-2xl flex flex-col gap-6 animate-scale-in">
+                <h2 class="text-2xl font-bold text-white mb-2 text-center flex items-center justify-center gap-2">
+                    <span>🎯</span>
+                    <span>Create your account</span>
+                </h2>
+                
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                  {% if messages %}
+                    {% for category, message in messages %}
+                      <div class="bg-red-500 bg-opacity-20 border border-red-300 text-red-100 px-4 py-3 rounded-xl text-center animate-pulse-slow">
+                        <i class="fas fa-exclamation-triangle mr-2"></i>
+                        {{ message }}
+                      </div>
+                    {% endfor %}
+                  {% endif %}
+                {% endwith %}
+                
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-user text-green-300"></i>
+                    </div>
+                    <input type="text" name="name" placeholder="Enter your full name" required 
+                           class="w-full pl-10 pr-4 py-4 rounded-xl border-0 bg-white bg-opacity-20 text-white placeholder-green-200 focus:outline-none focus:ring-2 focus:ring-green-300 input-focus transition-all duration-300" />
+                </div>
+                
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-envelope text-green-300"></i>
+                    </div>
+                    <input type="email" name="email" placeholder="Enter your email" required 
+                           class="w-full pl-10 pr-4 py-4 rounded-xl border-0 bg-white bg-opacity-20 text-white placeholder-green-200 focus:outline-none focus:ring-2 focus:ring-green-300 input-focus transition-all duration-300" />
+                </div>
+                
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-lock text-green-300"></i>
+                    </div>
+                    <input type="password" name="password" placeholder="Create a strong password" required 
+                           class="w-full pl-10 pr-4 py-4 rounded-xl border-0 bg-white bg-opacity-20 text-white placeholder-green-200 focus:outline-none focus:ring-2 focus:ring-green-300 input-focus transition-all duration-300" />
+                </div>
+                
+                <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-green-600 to-blue-600 text-white font-bold text-lg hover:from-green-700 hover:to-blue-700 transition-all duration-300 btn-hover flex items-center justify-center gap-2">
+                    <span>🎉</span>
+                    <span>Create Account</span>
+                    <i class="fas fa-rocket"></i>
+                </button>
+                
+                <div class="text-center">
+                    <p class="text-white text-opacity-80">
+                        Already have an account? 
+                        <a href="/login" class="text-yellow-300 font-semibold hover:text-yellow-200 transition-colors duration-300 flex items-center justify-center gap-1 mt-2">
+                            <span>🔐</span>
+                            <span>Sign in here</span>
+                        </a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </main>
+    
+    <script>
+        // Add some interactive animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.classList.add('scale-105');
+                });
+                input.addEventListener('blur', function() {
+                    this.parentElement.classList.remove('scale-105');
+                });
+            });
+            
+            // Add celebration animation on form submit
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function() {
+                const button = this.querySelector('button[type="submit"]');
+                button.classList.add('animate-wiggle');
+                setTimeout(() => {
+                    button.classList.remove('animate-wiggle');
+                }, 1000);
+            });
+        });
+    </script>
+</body>
+</html> 
