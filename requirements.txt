@@ -1,7 +1,6 @@
 Flask
 flask_socketio
 pymongo
-gridfs
 pytz
 werkzeug
 dnspython
