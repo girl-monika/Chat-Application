@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📄 Upload Document - Real-Time Chat App</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .animate-pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        .animate-bounce-slow {
+            animation: bounce 2s infinite;
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .animate-slide-up {
+            animation: slideUp 0.6s ease-out;
+        }
+        
+        .animate-scale-in {
+            animation: scaleIn 0.5s ease-out;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes scaleIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        
+        .input-focus:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .floating-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+        
+        .shape {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        .shape:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .shape:nth-child(2) { top: 20%; right: 10%; animation-delay: 2s; }
+        .shape:nth-child(3) { bottom: 20%; left: 20%; animation-delay: 4s; }
+        .shape:nth-child(4) { bottom: 10%; right: 20%; animation-delay: 6s; }
+        
+        .sidebar-item {
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-item:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-400 via-purple-500 to-pink-600 min-h-screen flex relative overflow-hidden">
+    <!-- Floating Background Shapes -->
+    <div class="floating-shapes">
+        <div class="shape text-6xl">📄</div>
+        <div class="shape text-4xl">📁</div>
+        <div class="shape text-5xl">🚀</div>
+        <div class="shape text-3xl">✨</div>
+    </div>
+    
+    <!-- Sidebar -->
+    <aside class="w-20 glass-effect shadow-2xl flex flex-col items-center py-8 space-y-8 min-h-screen relative z-10">
+        <a href="/dashboard" class="flex flex-col items-center group sidebar-item">
+            <span class="p-3 rounded-full bg-white bg-opacity-30 group-hover:bg-opacity-50 transition-all duration-300">
+                <i class="fas fa-home text-white text-lg"></i>
+            </span>
+            <span class="text-xs mt-2 text-white font-semibold">Home</span>
+        </a>
+        
+        <a href="/chat" class="flex flex-col items-center group sidebar-item">
+            <span class="p-3 rounded-full bg-white bg-opacity-30 group-hover:bg-opacity-50 transition-all duration-300">
+                <i class="fas fa-comments text-white text-lg"></i>
+            </span>
+            <span class="text-xs mt-2 text-white font-semibold">Chat</span>
+        </a>
+        
+        <a href="/groups" class="flex flex-col items-center group sidebar-item">
+            <span class="p-3 rounded-full bg-white bg-opacity-30 group-hover:bg-opacity-50 transition-all duration-300">
+                <i class="fas fa-users text-white text-lg"></i>
+            </span>
+            <span class="text-xs mt-2 text-white font-semibold">Groups</span>
+        </a>
+        
+        <a href="/logout" class="flex flex-col items-center group mt-auto sidebar-item">
+            <span class="p-3 rounded-full bg-red-500 bg-opacity-30 group-hover:bg-opacity-50 transition-all duration-300">
+                <i class="fas fa-sign-out-alt text-white text-lg"></i>
+            </span>
+            <span class="text-xs mt-2 text-white font-semibold">Logout</span>
+        </a>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="flex-1 p-6 md:p-10 relative z-10">
+        <div class="max-w-2xl mx-auto">
+            <div class="text-center mb-8 animate-fade-in">
+                <div class="text-6xl mb-4 animate-bounce-slow">📄</div>
+                <h1 class="text-4xl font-bold text-white mb-2">Upload Document</h1>
+                <p class="text-white text-opacity-90 text-lg">Share your documents securely</p>
+            </div>
+            
+            <div class="glass-effect rounded-2xl shadow-lg p-8 animate-slide-up">
+                <form method="POST" enctype="multipart/form-data" class="space-y-6">
+                    <div class="text-center">
+                        <div class="w-24 h-24 mx-auto mb-4 rounded-full bg-white bg-opacity-20 flex items-center justify-center">
+                            <i class="fas fa-cloud-upload-alt text-4xl text-white"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-white mb-2">Choose a file to upload</h2>
+                        <p class="text-white text-opacity-80 mb-6">Supported formats: PDF, DOCX, DOC, TXT, XLSX, PPTX</p>
+                    </div>
+                    
+                    <div class="relative">
+                        <input type="file" name="file" accept=".pdf,.docx,.doc,.txt,.xlsx,.pptx" required 
+                               class="w-full px-4 py-4 rounded-xl border-0 bg-white bg-opacity-20 text-white file:bg-transparent file:border-0 file:text-white file:mr-4 focus:outline-none focus:ring-2 focus:ring-blue-300 input-focus transition-all duration-300" />
+                    </div>
+                    
+                    <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 btn-hover flex items-center justify-center gap-2">
+                        <i class="fas fa-upload"></i>
+                        <span>Upload Document</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add some interactive animations
+            const fileInput = document.querySelector('input[type="file"]');
+            if (fileInput) {
+                fileInput.addEventListener('change', function() {
+                    if (this.files.length > 0) {
+                        this.parentElement.classList.add('scale-105');
+                        setTimeout(() => {
+                            this.parentElement.classList.remove('scale-105');
+                        }, 300);
+                    }
+                });
+            }
+        });
+    </script>
+    <script>feather.replace()</script>
+</body>
+</html>

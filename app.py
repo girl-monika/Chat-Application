@@ -1,6 +1,5 @@
 from flask import Flask, Response
 from flask import render_template, request, redirect, url_for, session, send_from_directory, flash, jsonify
-from flask import Blueprint
 from werkzeug.utils import secure_filename
 from pymongo import MongoClient
 import os
@@ -10,12 +9,14 @@ from functools import wraps
 from bson.objectid import ObjectId
 import pytz
 import gridfs
+from flask_socketio import SocketIO
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'  # For session management
+socketio = SocketIO(app)
 
 # MongoDB Atlas connection (replace with your URI)
-MONGO_URI = 'mongodb+srv://monika_anisetty:143mon@monika.wgpzo2k.mongodb.net/?retryWrites=true&w=majority&appName=Monika'
+MONGO_URI = 'mongodb+srv://monikaanisetty:monika@realtimechat.fvo9cku.mongodb.net/?retryWrites=true&w=majority&appName=realtimechat'
 client = MongoClient(MONGO_URI)
 db = client['secure-docs']
 fs = gridfs.GridFS(db)
@@ -32,6 +33,7 @@ auth_bp = Blueprint('auth', __name__)
 dashboard_bp = Blueprint('dashboard', __name__)
 documents_bp = Blueprint('documents', __name__)
 chat_bp = Blueprint('chat', __name__)
+group_chat_bp = Blueprint('group_chat', __name__)
 shared_links_bp = Blueprint('shared_links', __name__)
 
 # Home route
@@ -251,12 +253,149 @@ def chat_conversation(receiver_email):
     receiver = db.users.find_one({'email': receiver_email})
     return render_template('chat_conversation.html', chat_history=chat_history, receiver=receiver)
 
+# Group Chat Routes
+@group_chat_bp.route('/groups', methods=['GET', 'POST'])
+@login_required
+def groups():
+    user_email = session['user_email']
+    
+    if request.method == 'POST':
+        group_name = request.form['group_name']
+        group_description = request.form.get('group_description', '')
+        
+        # Create new group
+        group_id = str(uuid.uuid4())
+        db.groups.insert_one({
+            'group_id': group_id,
+            'name': group_name,
+            'description': group_description,
+            'created_by': user_email,
+            'created_at': datetime.utcnow(),
+            'members': [user_email],
+            'admin': user_email
+        })
+        flash('Group created successfully!', 'success')
+        return redirect(url_for('group_chat.group_chat', group_id=group_id))
+    
+    # Get all groups and categorize them
+    all_groups_cursor = db.groups.find({}).sort('created_at', -1)
+    user_groups = []
+    other_groups = []
+    
+    for group in all_groups_cursor:
+        if user_email in group['members']:
+            user_groups.append(group)
+        else:
+            other_groups.append(group)
+    
+    return render_template('groups.html', user_groups=user_groups, all_groups=other_groups)
+
+@group_chat_bp.route('/groups/join/<group_id>', methods=['POST'])
+@login_required
+def join_group(group_id):
+    user_email = session['user_email']
+    
+    # Add user to group
+    result = db.groups.update_one(
+        {'group_id': group_id},
+        {'$addToSet': {'members': user_email}}
+    )
+    
+    if result.modified_count > 0:
+        flash('Successfully joined the group!', 'success')
+    else:
+        flash('Failed to join group or already a member.', 'error')
+    
+    return redirect(url_for('group_chat.groups'))
+
+@group_chat_bp.route('/groups/leave/<group_id>', methods=['POST'])
+@login_required
+def leave_group(group_id):
+    user_email = session['user_email']
+    
+    # Check if user is admin
+    group = db.groups.find_one({'group_id': group_id, 'admin': user_email})
+    if group:
+        flash('Admin cannot leave the group. Transfer admin rights first.', 'error')
+        return redirect(url_for('group_chat.groups'))
+    
+    # Remove user from group
+    result = db.groups.update_one(
+        {'group_id': group_id},
+        {'$pull': {'members': user_email}}
+    )
+    
+    if result.modified_count > 0:
+        flash('Successfully left the group!', 'success')
+    else:
+        flash('Failed to leave group.', 'error')
+    
+    return redirect(url_for('group_chat.groups'))
+
+@group_chat_bp.route('/group/<group_id>', methods=['GET', 'POST'])
+@login_required
+def group_chat(group_id):
+    user_email = session['user_email']
+    
+    # Get group details
+    group = db.groups.find_one({'group_id': group_id})
+    if not group:
+        flash('Group not found!', 'error')
+        return redirect(url_for('group_chat.groups'))
+    
+    # Auto-join user if not a member (allow all users to access)
+    if user_email not in group['members']:
+        db.groups.update_one(
+            {'group_id': group_id},
+            {'$addToSet': {'members': user_email}}
+        )
+        # Refresh group data after adding user
+        group = db.groups.find_one({'group_id': group_id})
+    
+    if request.method == 'POST':
+        message = request.form['message']
+        db.group_messages.insert_one({
+            'group_id': group_id,
+            'sender_email': user_email,
+            'message': message,
+            'timestamp': datetime.utcnow()
+        })
+    
+    # Get group members details
+    group_members = list(db.users.find({'email': {'$in': group['members']}}))
+    
+    # Get chat history
+    chat_history = list(db.group_messages.find({'group_id': group_id}).sort('timestamp', 1))
+    
+    return render_template('group_chat.html', group=group, group_members=group_members, chat_history=chat_history)
+
 # Register Blueprints (must be after all routes are defined)
 app.register_blueprint(auth_bp)
 app.register_blueprint(dashboard_bp)
 app.register_blueprint(documents_bp)
 app.register_blueprint(chat_bp)
+app.register_blueprint(group_chat_bp)
 app.register_blueprint(shared_links_bp)
 
-if __name__ == '__main__':
-    app.run(debug=True) 
+if __name__ == "__main__":
+    # Use Flask's default server instead of eventlet
+    import socket
+    
+    def is_port_in_use(port):
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            return s.connect_ex(('127.0.0.1', port)) == 0
+    
+    # Try ports 5000-5010
+    port = 5000
+    while port < 5010 and is_port_in_use(port):
+        print(f"Port {port} is in use, trying next port...")
+        port += 1
+    
+    if port >= 5010:
+        print("No available ports found between 5000-5009")
+    else:
+        print(f"Starting server on http://127.0.0.1:{port}")
+        socketio.run(app, debug=True, use_reloader=False, host='127.0.0.1', port=port, allow_unsafe_werkzeug=True)
+
+
+

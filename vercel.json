@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "app.py",
+      "use": "@vercel/python",
+      "config": { "maxLambdaSize": "50mb" }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "app.py"
+    }
+  ],
+  "env": {
+    "MONGO_URI": "mongodb+srv://monikaanisetty:monika@realtimechat.fvo9cku.mongodb.net/?retryWrites=true&w=majority&appName=realtimechat",
+    "FLASK_ENV": "production",
+    "SECRET_KEY": "supersecretkey"
+  }
+}
